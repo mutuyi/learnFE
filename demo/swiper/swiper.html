@@ -158,7 +158,6 @@
                 to = 0
             }
             handlerForSwiperChange(to)
-
         })
         elBtnLeft.addEventListener('click', function() {
             to = currentIndex - 1
@@ -195,7 +194,6 @@
                     isAutoPlay = false
                     clearInterval(autoPlaySwiper)
                 }
-
             })
         }
 
@@ -214,11 +212,11 @@
         // 设置走马灯自动播放
         function autoPlay() {
             if (isAutoPlay) {
-                handlerForSwiperChange(to)
-                to++
+                to = currentIndex + 1
                 if (to > len - 1) {
                     to = 0
                 }
+                handlerForSwiperChange(to)
             }
         }
 
