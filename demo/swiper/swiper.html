@@ -133,11 +133,15 @@
         // })
         var currentIndex = 0
         var to = 0
+        var dotIndex
+        var swiperWrapper = document.querySelector('.swiper-wrapper')
         var elBtnRight = document.querySelector('.btn-right')
         var elBtnLeft = document.querySelector('.btn-left')
         var dotList = document.querySelector(".dot-list")
+        var dot = document.querySelectorAll(".dot")
         var item = document.querySelectorAll(".swiper-item")
         var len = document.querySelectorAll(".swiper-item").length
+        var isAutoPlay = true;
 
         const imgUrlList = ["https://img2.baidu.com/it/u=2924529279,2016285893&fm=26&fmt=auto",
                 "https://img0.baidu.com/it/u=2160943042,1224821775&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
@@ -146,7 +150,7 @@
             ]
             // 初始化index=0的图片地址
         const imgList = document.getElementsByTagName("img")
-        imgList[to].src = imgUrlList[to]
+        imgList[0].src = imgUrlList[0]
 
         elBtnRight.addEventListener('click', function() {
             to = currentIndex + 1
@@ -166,34 +170,65 @@
 
         dotList.addEventListener('click', function(e) {
             if (e.target.classList.contains("dot")) {
-                dotIndex = e.target.dataset.index
+                dotIndex = parseInt(e.target.dataset.index)
                 handlerForSwiperChange(dotIndex)
             }
 
         })
 
-        function handlerForSwiperChange(to) {
+        swiperWrapper.addEventListener('mouseover', function() {
+            isAutoPlay = false
+            clearInterval(autoPlaySwiper)
+        })
+        swiperWrapper.addEventListener('mouseleave', function() {
+                isAutoPlay = true
+                autoPlaySwiper = setInterval(function() {
+                    autoPlay()
+                }, 2000)
+            })
+            // 给走马灯的数字指示增加悬停切换，通过isAutoPlay（boolean)控制是否自动播放
+        for (let ele of dot) {
+            ele.addEventListener('mouseenter', function(e) {
+                if (e.target.classList.contains("dot")) {
+                    dotIndex = parseInt(e.target.dataset.index)
+                    handlerForSwiperChange(dotIndex)
+                    isAutoPlay = false
+                    clearInterval(autoPlaySwiper)
+                }
+
+            })
+        }
+
+        function handlerForSwiperChange(var1) {
             item[currentIndex].classList.remove('swiper-item-current')
-            item[to].classList.add("swiper-item-current")
-            imgList[to].src = imgUrlList[to]
-            currentIndex = to;
+            item[var1].classList.add("swiper-item-current")
+            imgList[var1].src = imgUrlList[var1]
+            currentIndex = var1;
         }
         // function handlerForSwiperChange(to) {
         //     item[currentIndex].style.display = "none"
         //     item[to].style.display = "block"
         //     currentIndex = to
         // }
+
+        // 设置走马灯自动播放
         function autoPlay() {
-            handlerForSwiperChange(to)
-            to = currentIndex + 1
-            if (to > len - 1) {
-                to = 0
+            if (isAutoPlay) {
+                handlerForSwiperChange(to)
+                to++
+                if (to > len - 1) {
+                    to = 0
+                }
             }
-            t = setTimeout("autoPlay()", 2000)
         }
-        autoPlay()
+
+        var autoPlaySwiper = setInterval(function() {
+            autoPlay()
+        }, 2000);
     </script>
 </body>
+
+</html>
 
 </html>
 
